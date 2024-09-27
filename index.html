@@ -46,14 +46,14 @@
 <body>
   <h2>Firebase Configuration</h2>
   <div>
-    <form action="http://ESP32_IP_ADDRESS/save-firebase" method="POST">
+    <form action="http://192.168.1.25/save-firebase" method="POST">
       <label for="email">Firebase Email</label><br>
       <input type="text" id="email" name="email" placeholder="Enter Firebase Email" required><br>
       <label for="password">Firebase Password</label><br>
       <input type="password" id="password" name="password" placeholder="Enter Firebase Password" required><br><br>
       <input type="submit" value="Submit">
     </form>
-    <form action="http://ESP32_IP_ADDRESS/reset-firebase" method="POST">
+    <form action="http://192.168.1.25/reset-firebase" method="POST">
       <input type="button" value="Reset Credentials">
     </form>
   </div>
