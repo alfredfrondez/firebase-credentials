@@ -17,7 +17,7 @@
       border-radius: 4px;
       box-sizing: border-box;
     }
-    input[type="submit"] {
+    input[type="submit"], input[type="button"] {
       width: 80%;
       background-color: #4CAF50;
       color: white;
@@ -27,8 +27,14 @@
       border-radius: 4px;
       cursor: pointer;
     }
+    input[type="button"] {
+      background-color: #f44336;
+    }
     input[type="submit"]:hover {
       background-color: #45a049;
+    }
+    input[type="button"]:hover {
+      background-color: #d32f2f;
     }
     div {
       border-radius: 5px;
@@ -46,6 +52,9 @@
       <label for="password">Firebase Password</label><br>
       <input type="password" id="password" name="password" placeholder="Enter Firebase Password" required><br><br>
       <input type="submit" value="Submit">
+    </form>
+    <form action="http://ESP32_IP_ADDRESS/reset-firebase" method="POST">
+      <input type="button" value="Reset Credentials">
     </form>
   </div>
 </body>
