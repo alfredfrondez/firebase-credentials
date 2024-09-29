@@ -2,60 +2,37 @@
 <html>
 <head>
   <title>Firebase Configuration</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 50px;
-    }
-    input[type="text"], input[type="password"] {
-      width: 80%;
-      padding: 12px 20px;
-      margin: 8px 0;
-      display: inline-block;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    input[type="submit"], input[type="button"] {
-      width: 80%;
-      background-color: #4CAF50;
-      color: white;
-      padding: 14px 20px;
-      margin: 8px 0;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    input[type="button"] {
-      background-color: #f44336;
-    }
-    input[type="submit"]:hover {
-      background-color: #45a049;
-    }
-    input[type="button"]:hover {
-      background-color: #d32f2f;
-    }
-    div {
-      border-radius: 5px;
-      background-color: #f2f2f2;
-      padding: 20px;
-    }
-  </style>
 </head>
 <body>
-  <h2>Firebase Configuration</h2>
-  <div>
-    <form action="http://192.168.1.25/save-firebase" method="POST">
-      <label for="email">Firebase Email</label><br>
-      <input type="text" id="email" name="email" placeholder="Enter Firebase Email" required><br>
-      <label for="password">Firebase Password</label><br>
-      <input type="password" id="password" name="password" placeholder="Enter Firebase Password" required><br><br>
-      <input type="submit" value="Submit">
-    </form>
-    <form action="http://192.168.1.25/reset-firebase" method="POST">
-      <input type="button" value="Reset Credentials">
-    </form>
-  </div>
+  <h2>Enter Firebase Credentials</h2>
+  <form id="firebaseForm">
+    <label for="email">Firebase Email:</label><br>
+    <input type="text" id="email" name="email"><br>
+    <label for="firebase_password">Firebase Password:</label><br>
+    <input type="password" id="firebase_password" name="firebase_password"><br><br>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    document.getElementById('firebaseForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const firebase_password = document.getElementById('firebase_password').value;
+
+      // Send Firebase credentials to the ESP32
+      fetch('http://<ESP32-IP>/save-firebase', {  // Replace <ESP32-IP> with ESP32's actual IP
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `email=${email}&firebase_password=${firebase_password}`
+      })
+      .then(response => response.text())
+      .then(data => alert("Firebase Credentials Saved: " + data))
+      .catch((error) => console.error('Error:', error));
+    });
+  </script>
 </body>
 </html>
