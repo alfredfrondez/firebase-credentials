@@ -7,9 +7,9 @@
   <h2>Enter Firebase Credentials</h2>
   <form id="firebaseForm">
     <label for="email">Firebase Email:</label><br>
-    <input type="text" id="email" name="email"><br>
+    <input type="text" id="email" name="email" required><br>
     <label for="firebase_password">Firebase Password:</label><br>
-    <input type="password" id="firebase_password" name="firebase_password"><br><br>
+    <input type="password" id="firebase_password" name="firebase_password" required><br><br>
 
     <button type="submit">Submit</button>
   </form>
@@ -21,17 +21,25 @@
       const email = document.getElementById('email').value;
       const firebase_password = document.getElementById('firebase_password').value;
 
+      if (!email || !firebase_password) {
+        alert("Please fill in both fields.");
+        return;
+      }
+
       // Send Firebase credentials to the ESP32
       fetch('http://192.168.0.101/save-firebase', {  // Replace <ESP32-IP> with ESP32's actual IP
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `email=${email}&firebase_password=${firebase_password}`
+        body: `email=${encodeURIComponent(email)}&firebase_password=${encodeURIComponent(firebase_password)}`
       })
       .then(response => response.text())
       .then(data => alert("Firebase Credentials Saved: " + data))
-      .catch((error) => console.error('Error:', error));
+      .catch((error) => {
+        console.error('Error:', error);
+        alert('Failed to send credentials. Please try again.');
+      });
     });
   </script>
 </body>
