@@ -22,7 +22,7 @@
       const firebase_password = document.getElementById('firebase_password').value;
 
       // Send Firebase credentials to the ESP32
-      fetch('http://<ESP32-IP>/save-firebase', {  // Replace <ESP32-IP> with ESP32's actual IP
+      fetch('http://192.168.0.101/save-firebase', {  // Replace <ESP32-IP> with ESP32's actual IP
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
