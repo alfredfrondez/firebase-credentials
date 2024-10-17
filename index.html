@@ -12,9 +12,11 @@
     <input type="password" id="firebase_password" name="firebase_password" required><br><br>
 
     <button type="submit">Submit</button>
+    <button type="button" id="resetBtn">Reset Credentials</button>
   </form>
 
   <script>
+    // Handle form submission for saving Firebase credentials
     document.getElementById('firebaseForm').addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -40,6 +42,22 @@
         console.error('Error:', error);
         alert('Failed to send credentials. Please try again.');
       });
+    });
+
+    // Handle reset button for clearing Firebase credentials
+    document.getElementById('resetBtn').addEventListener('click', function () {
+      if (confirm("Are you sure you want to reset the Firebase credentials?")) {
+        // Send a request to the ESP32 to reset the credentials
+        fetch('http://192.168.0.101/reset-firebase', {  // Replace <ESP32-IP> with ESP32's actual IP
+          method: 'POST',
+        })
+        .then(response => response.text())
+        .then(data => alert("Firebase Credentials Reset: " + data))
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('Failed to reset credentials. Please try again.');
+        });
+      }
     });
   </script>
 </body>
