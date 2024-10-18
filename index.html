@@ -88,6 +88,9 @@
     </form>
 
     <script>
+        // Get the ESP32 IP dynamically
+        const esp32Ip = window.location.hostname;  // Use current page's hostname
+
         // Handle form submission for saving Firebase credentials
         document.getElementById('firebaseForm').addEventListener('submit', function (e) {
             e.preventDefault();
@@ -100,34 +103,52 @@
                 return;
             }
 
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email regex
+            if (!emailPattern.test(email)) {
+                alert("Please enter a valid email address.");
+                return;
+            }
+
             // Send Firebase credentials to the ESP32
-            fetch('http://192.168.0.101/save-firebase', {  // Replace <ESP32-IP> with ESP32's actual IP
+            fetch(`http://${esp32Ip}/save-firebase`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: `email=${encodeURIComponent(email)}&firebase_password=${encodeURIComponent(firebase_password)}`
             })
-            .then(response => response.text())
-            .then(data => alert("Firebase Credentials Saved: " + data))
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.text();
+            })
+            .then(data => {
+                alert("Firebase Credentials Saved: " + data);
+                document.getElementById('firebaseForm').reset(); // Clear form fields
+            })
             .catch((error) => {
                 console.error('Error:', error);
-                alert('Failed to send credentials. Please try again.');
+                alert('Failed to send credentials. Please try again. ' + error.message);
             });
         });
 
         // Handle reset button for clearing Firebase credentials
         document.getElementById('resetBtn').addEventListener('click', function () {
             if (confirm("Are you sure you want to reset the Firebase credentials?")) {
-                // Send a request to the ESP32 to reset the credentials
-                fetch('http://192.168.0.101/reset-firebase', {  // Replace <ESP32-IP> with ESP32's actual IP
+                fetch(`http://${esp32Ip}/reset-firebase`, {
                     method: 'POST',
                 })
-                .then(response => response.text())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.text();
+                })
                 .then(data => alert("Firebase Credentials Reset: " + data))
                 .catch((error) => {
                     console.error('Error:', error);
-                    alert('Failed to reset credentials. Please try again.');
+                    alert('Failed to reset credentials. Please try again.' + error.message);
                 });
             }
         });
