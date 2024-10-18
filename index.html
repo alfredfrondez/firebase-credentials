@@ -1,64 +1,136 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Firebase Configuration</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 48%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button[type="submit"] {
+            background-color: #28a745;
+            color: white;
+        }
+
+        button[type="button"] {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 480px) {
+            button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h2>Enter Firebase Credentials</h2>
-  <form id="firebaseForm">
-    <label for="email">Firebase Email:</label><br>
-    <input type="text" id="email" name="email" required><br>
-    <label for="firebase_password">Firebase Password:</label><br>
-    <input type="password" id="firebase_password" name="firebase_password" required><br><br>
+    <h2>Enter Firebase Credentials</h2>
+    <form id="firebaseForm">
+        <label for="email">Firebase Email:</label>
+        <input type="text" id="email" name="email" required>
+        
+        <label for="firebase_password">Firebase Password:</label>
+        <input type="password" id="firebase_password" name="firebase_password" required>
 
-    <button type="submit">Submit</button>
-    <button type="button" id="resetBtn">Reset Credentials</button>
-  </form>
+        <button type="submit">Submit</button>
+        <button type="button" id="resetBtn">Reset Credentials</button>
+    </form>
 
-  <script>
-    // Handle form submission for saving Firebase credentials
-    document.getElementById('firebaseForm').addEventListener('submit', function (e) {
-      e.preventDefault();
+    <script>
+        // Handle form submission for saving Firebase credentials
+        document.getElementById('firebaseForm').addEventListener('submit', function (e) {
+            e.preventDefault();
 
-      const email = document.getElementById('email').value;
-      const firebase_password = document.getElementById('firebase_password').value;
+            const email = document.getElementById('email').value;
+            const firebase_password = document.getElementById('firebase_password').value;
 
-      if (!email || !firebase_password) {
-        alert("Please fill in both fields.");
-        return;
-      }
+            if (!email || !firebase_password) {
+                alert("Please fill in both fields.");
+                return;
+            }
 
-      // Send Firebase credentials to the ESP32
-      fetch('http://192.168.0.101/save-firebase', {  // Replace <ESP32-IP> with ESP32's actual IP
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `email=${encodeURIComponent(email)}&firebase_password=${encodeURIComponent(firebase_password)}`
-      })
-      .then(response => response.text())
-      .then(data => alert("Firebase Credentials Saved: " + data))
-      .catch((error) => {
-        console.error('Error:', error);
-        alert('Failed to send credentials. Please try again.');
-      });
-    });
-
-    // Handle reset button for clearing Firebase credentials
-    document.getElementById('resetBtn').addEventListener('click', function () {
-      if (confirm("Are you sure you want to reset the Firebase credentials?")) {
-        // Send a request to the ESP32 to reset the credentials
-        fetch('http://192.168.0.101/reset-firebase', {  // Replace <ESP32-IP> with ESP32's actual IP
-          method: 'POST',
-        })
-        .then(response => response.text())
-        .then(data => alert("Firebase Credentials Reset: " + data))
-        .catch((error) => {
-          console.error('Error:', error);
-          alert('Failed to reset credentials. Please try again.');
+            // Send Firebase credentials to the ESP32
+            fetch('http://192.168.0.101/save-firebase', {  // Replace <ESP32-IP> with ESP32's actual IP
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `email=${encodeURIComponent(email)}&firebase_password=${encodeURIComponent(firebase_password)}`
+            })
+            .then(response => response.text())
+            .then(data => alert("Firebase Credentials Saved: " + data))
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Failed to send credentials. Please try again.');
+            });
         });
-      }
-    });
-  </script>
+
+        // Handle reset button for clearing Firebase credentials
+        document.getElementById('resetBtn').addEventListener('click', function () {
+            if (confirm("Are you sure you want to reset the Firebase credentials?")) {
+                // Send a request to the ESP32 to reset the credentials
+                fetch('http://192.168.0.101/reset-firebase', {  // Replace <ESP32-IP> with ESP32's actual IP
+                    method: 'POST',
+                })
+                .then(response => response.text())
+                .then(data => alert("Firebase Credentials Reset: " + data))
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Failed to reset credentials. Please try again.');
+                });
+            }
+        });
+    </script>
 </body>
 </html>
